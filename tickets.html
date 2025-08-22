@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Inside Event – Tickets</title>
+<meta name="description" content="Inside Event Baghdad — VIP tiers, fast-track entry, and world-class production. Book your tickets securely with PayTabs." />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Cairo:wght@500;700&display=swap" rel="stylesheet" />
+
+<style>
+  /* =========================
+     CORE THEME
+     ========================= */
+  :root{
+    --bg:#0b0b0f;
+    --card:#14141d;
+    --muted:#9aa0a6;
+    --accent:#ffd700;
+    --accent2:#e0c068;
+    --ok:#2ecc71;
+    --warn:#ff9f43;
+    --danger:#ff4d4f;
+    --text:#f5f7fb;
+    --border:#1e2030;
+    --ink:#10121b;
+    --ink-2:#0e1120;
+    --ink-3:#0c0f1b;
+    --shadow:0 12px 30px rgba(0,0,0,.35);
+    --shadow-2:0 18px 48px rgba(0,0,0,.50);
+    --ring:#22253a;
+    --gold-grad:linear-gradient(90deg,#ffd700,#e0c068);
+    --soft-grad:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:Montserrat,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+  a{color:inherit;text-decoration:none}
+
+  /* =========================
+     HEADER
+     ========================= */
+  header{
+    padding:56px 20px;
+    background:
+      radial-gradient(1200px 400px at 10% -20%, rgba(255,215,0,.12), transparent 60%),
+      radial-gradient(1000px 600px at 110% -40%, rgba(224,192,104,.08), transparent 60%),
+      linear-gradient(90deg,#12121a,#151524 60%,#12121a);
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  header h1{font-weight:800;letter-spacing:.3px;font-size:clamp(28px,4vw,44px);margin:0}
+  header p{margin:.6rem 0 0;color:var(--muted)}
+  .badge{
+    display:inline-block;padding:.35rem .8rem;border-radius:999px;background:rgba(255,215,0,.12);
+    color:var(--accent);font-weight:800;margin-bottom:8px
+  }
+  /* soft animated rays (subtle) */
+  .ray{
+    position:absolute;inset:-20%;pointer-events:none;opacity:.15;mix-blend-mode:screen;
+    background:radial-gradient(600px 220px at 30% 30%, rgba(255,215,0,.25), transparent 60%),
+               radial-gradient(700px 260px at 70% 10%, rgba(224,192,104,.25), transparent 60%);
+    animation:floatRay 22s ease-in-out infinite;
+  }
+  @keyframes floatRay{
+    0% { transform:translateY(0) rotate(0deg); }
+    50%{ transform:translateY(-12px) rotate(2deg); }
+    100%{ transform:translateY(0) rotate(0deg); }
+  }
+
+  /* =========================
+     LAYOUT
+     ========================= */
+  .container{max-width:1150px;margin:auto;padding:28px 20px}
+  .grid{display:grid;gap:20px}
+  .tickets{grid-template-columns:repeat(12,1fr)}
+  .left{grid-column:span 7}
+  .right{grid-column:span 5}
+  @media(max-width:1080px){.left{grid-column:span 7}.right{grid-column:span 5}}
+  @media(max-width:980px){.left,.right{grid-column:span 12}}
+
+  .card{
+    background:var(--soft-grad);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:22px;
+    box-shadow:var(--shadow);
+  }
+
+  /* =========================
+     SOCIAL PROOF (auto-rotating text)
+     ========================= */
+  .social-proof-wrap{
+    display:flex;align-items:center;justify-content:center;gap:10px;margin:10px 0 18px;
+  }
+  .social-fire{font-size:20px}
+  .social-proof{
+    font-size:1.05rem;text-align:center;color:var(--accent);font-weight:800;min-height:1.2em;
+    transition:opacity .4s ease, transform .4s ease;
+  }
+  .social-proof.fade-out{opacity:0;transform:translateY(-4px)}
+  .social-proof.fade-in{opacity:1;transform:translateY(0)}
+
+  /* =========================
+     TICKETS
+     ========================= */
+  .ticket{
+    display:grid;grid-template-columns:1fr auto;gap:14px;align-items:start;
+    padding:18px;border-radius:16px;background:var(--card);border:1px solid var(--border);
+    transition:transform .15s ease, box-shadow .15s ease
+  }
+  .ticket:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.28)}
+  .ticket + .ticket{margin-top:14px}
+  .ticket h3{margin:0 0 6px;font-size:1.1rem}
+  .pill{padding:4px 10px;border-radius:999px;font-size:.8rem;font-weight:800;white-space:nowrap}
+  .pill.vip{background:rgba(224,192,104,.18);color:var(--accent2);box-shadow:0 0 10px rgba(255,215,0,.25);animation:vipglow 2.4s ease-in-out infinite alternate}
+  @keyframes vipglow{from{box-shadow:0 0 6px rgba(255,215,0,.25)}to{box-shadow:0 0 18px rgba(255,215,0,.45)}}
+  .stock-line{font-size:.9rem;color:var(--muted)}
+  .bar-wrap{height:8px;background:#1b1d2b;border-radius:999px;overflow:hidden;margin-top:8px}
+  .bar{height:100%;width:35%;background:var(--gold-grad)}
+  .scarce{color:var(--warn);font-weight:800}
+  .oos{color:var(--danger);font-weight:800}
+
+  label{display:block;font-size:.9rem;color:var(--muted);margin:10px 0 6px}
+  select,input[type="text"],input[type="email"],input[type="date"]{
+    width:100%;padding:12px 14px;background:var(--ink);border:1px solid var(--ring);color:var(--text);border-radius:12px;outline:none;
+  }
+  .qty{display:flex;gap:10px;align-items:center}
+  .price{font-weight:800}
+
+  .totals{display:grid;grid-template-columns:1fr auto;gap:8px;font-weight:800}
+  .muted{color:var(--muted);font-weight:600}
+  .btn{
+    width:100%;padding:16px 18px;border:none;border-radius:14px;font-weight:900;letter-spacing:.2px;
+    background:var(--gold-grad);color:#1a1a1a;cursor:pointer;transition:transform .12s ease, filter .12s ease;
+  }
+  .btn:hover{transform:translateY(-1px);filter:brightness(1.03)}
+
+  /* =========================
+     REVIEWS CAROUSEL
+     ========================= */
+  .carousel{overflow:hidden;position:relative;margin-top:12px}
+  .carousel-track{display:flex;gap:14px;animation:slide 26s linear infinite}
+  .review{flex:0 0 320px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px}
+  .stars{letter-spacing:2px;color:var(--accent)}
+  .review .lang-ar{font-family:Cairo,sans-serif;direction:rtl}
+  @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* =========================
+     2D VENUE MAP (SVG)
+     ========================= */
+  .map-card h2{margin:0 0 10px}
+  .map-wrap-2d{
+    margin-top:8px;background:var(--ink-2);border:1px solid var(--border);border-radius:18px;overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+  .map-toolbar{
+    display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--ink-3);border-bottom:1px solid var(--border);
+    border-top-left-radius:18px;border-top-right-radius:18px
+  }
+  .map-toolbar .left-tools{display:flex;gap:8px;align-items:center}
+  .chip{font-size:.78rem;padding:6px 10px;border:1px solid var(--ring);border-radius:999px;background:#0f1326}
+  .map-stage{
+    width:100%;height:auto;display:block;background:linear-gradient(180deg,#0f1220 0%, #0b0d18 100%);
+  }
+  /* zone styles */
+  .z-reg{fill:#b8c2cc}
+  .z-vip{fill:url(#vipGradient)}
+  .z-stage{fill:url(#stageGradient)}
+  .z-entr{fill:url(#entranceGradient)}
+  .z-food{fill:url(#foodGradient)}
+  .z-park{fill:url(#parkGradient)}
+  .zone-stroke{stroke:#1e2238;stroke-width:2}
+  .zone{cursor:pointer;transition:filter .15s ease, transform .1s ease}
+  .zone:hover{filter:brightness(1.08)}
+  .zone.selected{filter:drop-shadow(0 0 10px rgba(255,215,0,.45))}
+  .zone-label{font-size:12px;font-weight:800;fill:#0d0d0d;pointer-events:none}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+  .legend .dot{width:12px;height:12px;border-radius:3px;display:inline-block;margin-right:6px}
+  .map-hint{font-size:.85rem;color:var(--muted);margin:8px 0 0}
+
+  /* tooltip badge */
+  .map-tooltip{
+    position:absolute;transform:translate(-50%,-130%);background:rgba(0,0,0,.75);color:#fff;font-size:.78rem;
+    padding:.35rem .6rem;border-radius:8px;pointer-events:none;opacity:0;transition:opacity .12s ease, transform .12s ease;z-index:5
+  }
+  .map-tooltip.visible{opacity:1;transform:translate(-50%,-140%)}
+  .map-holder{position:relative}
+
+  /* =========================
+     FLOATING HELP + CHAT
+     ========================= */
+  .help-btn{
+    position:fixed;bottom:20px;right:20px;background:linear-gradient(180deg,#ffd700,#e0c068);
+    color:#111;border:none;border-radius:50%;width:60px;height:60px;font-size:26px;font-weight:900;cursor:pointer;
+    box-shadow:0 10px 22px rgba(255,215,0,.35);transition:transform .12s ease;z-index:50
+  }
+  .help-btn:hover{transform:translateY(-2px)}
+  .chatbox{
+    position:fixed;bottom:92px;right:20px;width:320px;max-width:92vw;background:var(--card);border:1px solid var(--border);
+    border-radius:14px;box-shadow:0 18px 36px rgba(0,0,0,.45);display:none;flex-direction:column;overflow:hidden;z-index:50
+  }
+  .chat-head{padding:10px 12px;background:#111425;color:var(--text);font-weight:800;border-bottom:1px solid var(--border)}
+  .chat-body{padding:10px;max-height:260px;overflow:auto}
+  .msg{padding:10px 12px;border-radius:12px;margin:6px 0;max-width:85%}
+  .m-you{background:#0f1326;border:1px solid #222849;margin-left:auto}
+  .m-bot{background:#10192e;border:1px solid #1f2740}
+  .chat-foot{display:flex;gap:6px;padding:8px;border-top:1px solid var(--border)}
+  .chat-foot input{flex:1}
+  .chat-foot button{padding:10px 12px;border-radius:10px;border:1px solid #22253a;background:#141a30;color:#fff;cursor:pointer}
+
+  /* =========================
+     ABOUT SECTION
+     ========================= */
+  .about-grid{
+    display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:start
+  }
+  @media(max-width:980px){.about-grid{grid-template-columns:1fr}}
+  .about-lead{font-weight:700;font-size:1.05rem;color:#e9ecf6}
+  .about-facts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+  .fact{
+    background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;
+  }
+  .fact h4{margin:0 0 6px;font-size:.95rem}
+  .fact p{margin:0;color:var(--muted);font-size:.9rem;line-height:1.5}
+  .about-badges{
+    display:flex;gap:10px;flex-wrap:wrap;margin-top:10px
+  }
+  .badge-soft{
+    padding:.5rem .75rem;border-radius:10px;border:1px dashed #2a2d44;background:#0f1326;color:#cdd3e1;font-weight:700;font-size:.82rem
+  }
+
+  /* =========================
+     FOOTER
+     ========================= */
+  footer{padding:26px;text-align:center;color:var(--muted);border-top:1px solid var(--border);margin-top:26px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="ray" aria-hidden="true"></div>
+  <div class="badge">Inside Event • Baghdad</div>
+  <h1>Secure Your Spot — Limited VIP Tiers</h1>
+  <p>Premium hospitality • World-class production • Unforgettable night</p>
+</header>
+
+<main class="container grid tickets" role="main">
+  <!-- LEFT: Tickets -->
+  <section class="left" aria-label="Ticket selection">
+    <!-- Auto-rotating social proof -->
+    <div class="social-proof-wrap" aria-live="polite">
+      <span class="social-fire">🔥</span>
+      <div id="socialProof" class="social-proof">534 people purchased tickets this week!</div>
+    </div>
+
+    <div class="card" aria-labelledby="chooseTitle">
+      <h2 id="chooseTitle" style="margin:0 0 8px">Choose Your Tickets</h2>
+      <p class="muted" style="margin:8px 0 16px">VIP tiers sell out first. Prices include fast-track entry & lounge access.</p>
+
+      <!-- Ticket items -->
+      <div id="ticketsList">
+        <!-- Regular -->
+        <div class="ticket" data-key="regular" data-price="250" data-stock="600">
+          <div>
+            <h3>Regular Ticket</h3>
+            <div class="stock-line">
+              <span class="remain" data-role="remain"></span> left •
+              <span class="status" data-role="status"></span>
+            </div>
+            <div class="bar-wrap"><div class="bar" data-role="bar"></div></div>
+            <label>Quantity</label>
+            <div class="qty">
+              <select data-role="qty" aria-label="Regular ticket quantity"></select>
+              <span class="price">@ $250</span>
+            </div>
+          </div>
+          <div>
+            <span class="pill">General</span>
+          </div>
+        </div>
+
+        <!-- VIP Silver -->
+        <div class="ticket" data-key="vip_silver" data-price="1000" data-stock="120">
+          <div>
+            <h3>VIP Silver</h3>
+            <div class="stock-line">
+              <span class="remain" data-role="remain"></span> left •
+              <span class="status" data-role="status"></span>
+            </div>
+            <div class="bar-wrap"><div class="bar" data-role="bar"></div></div>
+            <label>Quantity</label>
+            <div class="qty">
+              <select data-role="qty" aria-label="VIP Silver quantity"></select>
+              <span class="price">@ $1,000</span>
+            </div>
+          </div>
+          <div>
+            <span class="pill vip">VIP</span>
+          </div>
+        </div>
+
+        <!-- VIP Gold -->
+        <div class="ticket" data-key="vip_gold" data-price="2500" data-stock="80">
+          <div>
+            <h3>VIP Gold</h3>
+            <div class="stock-line">
+              <span class="remain" data-role="remain"></span> left •
+              <span class="status" data-role="status"></span>
+            </div>
+            <div class="bar-wrap"><div class="bar" data-role="bar"></div></div>
+            <label>Quantity</label>
+            <div class="qty">
+              <select data-role="qty" aria-label="VIP Gold quantity"></select>
+              <span class="price">@ $2,500</span>
+            </div>
+          </div>
+          <div>
+            <span class="pill vip">VIP</span>
+          </div>
+        </div>
+
+        <!-- VIP Diamond -->
+        <div class="ticket" data-key="vip_diamond" data-price="9000" data-stock="30">
+          <div>
+            <h3>VIP Diamond</h3>
+            <div class="stock-line">
+              <span class="remain" data-role="remain"></span> left •
+              <span class="status" data-role="status"></span>
+            </div>
+            <div class="bar-wrap"><div class="bar" data-role="bar"></div></div>
+            <label>Quantity</label>
+            <div class="qty">
+              <select data-role="qty" aria-label="VIP Diamond quantity"></select>
+              <span class="price">@ $9,000</span>
+            </div>
+          </div>
+          <div>
+            <span class="pill vip">VIP</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Customer info -->
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:14px;margin-top:16px">
+        <div>
+          <label for="name">Full name</label>
+          <input id="name" type="text" placeholder="Your name" autocomplete="name" />
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="you@example.com" autocomplete="email" />
+        </div>
+        <div>
+          <label for="dob">Date of birth</label>
+          <input id="dob" type="date" />
+        </div>
+        <div>
+          <label for="note">Note (optional)</label>
+          <input id="note" type="text" placeholder="Allergies / requests" />
+        </div>
+      </div>
+
+      <!-- Totals -->
+      <div class="card" style="margin-top:16px">
+        <div class="totals">
+          <div class="muted">Subtotal</div><div id="subtotal">$0</div>
+          <div class="muted">Fees (3%)</div><div id="fees">$0</div>
+          <div class="muted">Total</div><div id="total" style="font-size:1.2rem">$0</div>
+        </div>
+        <button class="btn" id="buyBtn" aria-label="Buy tickets securely">Buy Tickets</button>
+        <div class="muted" style="margin-top:8px;font-size:.85rem">Payments handled securely by PayTabs.</div>
+      </div>
+    </div>
+
+    <!-- Reviews Carousel (EN + AR) -->
+    <div class="card" aria-labelledby="reviewsTitle">
+      <h2 id="reviewsTitle" style="margin:0 0 8px">Guest Reviews</h2>
+      <div class="carousel">
+        <div class="carousel-track" id="carouselTrack">
+          <!-- duplicated for seamless loop (JS will clone again) -->
+          <div class="review"><div class="stars">★★★★★</div><p>“Best night of the year. VIP service was top-notch.” — Layla, London</p></div>
+          <div class="review"><div class="stars">★★★★★</div><p class="lang-ar">"كان الحدث رائعًا جدًا والتنظيم ممتاز!" — سامي، بغداد</p></div>
+          <div class="review"><div class="stars">★★★★★</div><p>“Electric atmosphere and incredible production quality.” — Ahmed, Dubai</p></div>
+          <div class="review"><div class="stars">★★★★★</div><p class="lang-ar">"خدمات كبار الشخصيات فاخرة وتجربة لا تُنسى." — مريم، الدوحة</p></div>
+          <div class="review"><div class="stars">★★★★★</div><p>“Came for the music, stayed for the vibe.” — Sara, Amman</p></div>
+          <div class="review"><div class="stars">★★★★★</div><p class="lang-ar">"أجواء مذهلة والجميع ودود!" — علي، البصرة</p></div>
+          <div class="review"><div class="stars">★★★★★</div><p>“Organization was flawless. Will come again.” — Noor, Erbil</p></div>
+          <div class="review"><div class="stars">★★★★★</div><p class="lang-ar">"أفضل ليلة هذا العام!" — فاطمة، بغداد</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIGHT: 2D Venue Map + Why + About -->
+  <aside class="right" aria-label="Venue information">
+    <!-- 2D SVG MAP -->
+    <div class="card map-card">
+      <h2>Venue Map (2D Plan)</h2>
+      <p class="muted" style="margin:6px 0 10px">Hover or tap zones to view details. Click to pin a zone.</p>
+
+      <div class="map-wrap-2d">
+        <div class="map-toolbar">
+          <div class="left-tools">
+            <span class="chip">Main Floor</span>
+            <span class="chip">VIP Lounges</span>
+            <span class="chip">Service</span>
+          </div>
+          <span class="muted" style="font-size:.85rem">Scale 1:250</span>
+        </div>
+
+        <div class="map-holder" id="mapHolder" aria-label="Venue map interactive area">
+          <div id="mapTooltip" class="map-tooltip" role="tooltip" aria-hidden="true">Info</div>
+
+          <svg class="map-stage" viewBox="0 0 900 540" role="img" aria-labelledby="mapTitle mapDesc">
+            <title id="mapTitle">Inside Event — 2D Venue Plan</title>
+            <desc id="mapDesc">Plan showing stage, VIP areas, regular sections, entrances, food court, and parking.</desc>
+
+            <!-- defs: gradients -->
+            <defs>
+              <linearGradient id="vipGradient" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#ffd700"/>
+                <stop offset="100%" stop-color="#e0c068"/>
+              </linearGradient>
+              <linearGradient id="stageGradient" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#ff6b6b"/>
+                <stop offset="100%" stop-color="#ff9f9f"/>
+              </linearGradient>
+              <linearGradient id="entranceGradient" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#6bc1ff"/>
+                <stop offset="100%" stop-color="#a9dcff"/>
+              </linearGradient>
+              <linearGradient id="foodGradient" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#34d399"/>
+                <stop offset="100%" stop-color="#9ae6b4"/>
+              </linearGradient>
+              <linearGradient id="parkGradient" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#a78bfa"/>
+                <stop offset="100%" stop-color="#d8b4fe"/>
+              </linearGradient>
+            </defs>
+
+            <!-- perimeter -->
+            <rect x="20" y="20" width="860" height="500" rx="18" ry="18" fill="#0e1120" stroke="#2a2d44" stroke-width="2"></rect>
+
+            <!-- Regular Areas -->
+            <g class="zone z-reg zone-stroke" data-tip="Regular Area A • Great view • Closest bar" tabindex="0">
+              <rect class="zone" x="40" y="300" width="300" height="180" rx="10"></rect>
+              <text class="zone-label" x="190" y="390" text-anchor="middle">REGULAR A</text>
+            </g>
+
+            <g class="zone z-reg zone-stroke" data-tip="Regular Area B • Central view" tabindex="0">
+              <rect class="zone" x="360" y="300" width="300" height="180" rx="10"></rect>
+              <text class="zone-label" x="510" y="390" text-anchor="middle">REGULAR B</text>
+            </g>
+
+            <!-- VIP Lounges -->
+            <g class="zone z-vip zone-stroke" data-tip="VIP Silver Lounge • Table service" tabindex="0">
+              <rect class="zone" x="80" y="160" width="200" height="110" rx="10"></rect>
+              <text class="zone-label" x="180" y="220" text-anchor="middle">VIP SILVER</text>
+            </g>
+
+            <g class="zone z-vip zone-stroke" data-tip="VIP Gold Tables • Premium bottle service" tabindex="0">
+              <rect class="zone" x="320" y="150" width="240" height="100" rx="10"></rect>
+              <text class="zone-label" x="440" y="205" text-anchor="middle">VIP GOLD</text>
+            </g>
+
+            <g class="zone z-vip zone-stroke" data-tip="VIP Diamond Suites • Private host" tabindex="0">
+              <rect class="zone" x="590" y="160" width="210" height="120" rx="10"></rect>
+              <text class="zone-label" x="695" y="220" text-anchor="middle">VIP DIAMOND</text>
+            </g>
+
+            <!-- Stage -->
+            <g class="zone z-stage zone-stroke" data-tip="Main Stage • DJ & Singer" tabindex="0">
+              <rect class="zone" x="700" y="320" width="160" height="120" rx="10"></rect>
+              <text class="zone-label" x="780" y="385" text-anchor="middle">STAGE</text>
+            </g>
+
+            <!-- Entrances -->
+            <g class="zone z-entr zone-stroke" data-tip="Entrance A (General)" tabindex="0">
+              <rect class="zone" x="40" y="470" width="180" height="40" rx="8"></rect>
+              <text class="zone-label" x="130" y="495" text-anchor="middle">ENTRANCE A</text>
+            </g>
+
+            <g class="zone z-entr zone-stroke" data-tip="Entrance B (VIP Fast-Track)" tabindex="0">
+              <rect class="zone" x="700" y="470" width="180" height="40" rx="8"></rect>
+              <text class="zone-label" x="790" y="495" text-anchor="middle">VIP ENTRY</text>
+            </g>
+
+            <!-- Food & Parking -->
+            <g class="zone z-food zone-stroke" data-tip="Food Trucks & Drinks" tabindex="0">
+              <rect class="zone" x="40" y="40" width="160" height="80" rx="8"></rect>
+              <text class="zone-label" x="120" y="85" text-anchor="middle">FOOD</text>
+            </g>
+
+            <g class="zone z-park zone-stroke" data-tip="Staff & Valet Parking" tabindex="0">
+              <rect class="zone" x="740" y="40" width="140" height="90" rx="8"></rect>
+              <text class="zone-label" x="810" y="85" text-anchor="middle">PARKING</text>
+            </g>
+          </svg>
+        </div>
+        <p class="map-hint">Tip: Click a zone to keep it highlighted; click again to unselect.</p>
+      </div>
+
+      <div class="legend" aria-label="Map legend">
+        <span><span class="dot" style="background:#c1c7d0"></span>Regular</span>
+        <span><span class="dot" style="background:linear-gradient(180deg,#ffd700,#e0c068)"></span>VIP</span>
+        <span><span class="dot" style="background:linear-gradient(180deg,#ff6b6b,#ff9f9f)"></span>Stage/DJ</span>
+        <span><span class="dot" style="background:linear-gradient(180deg,#6bc1ff,#a9dcff)"></span>Entrance</span>
+        <span><span class="dot" style="background:linear-gradient(180deg,#34d399,#9ae6b4)"></span>Food</span>
+        <span><span class="dot" style="background:linear-gradient(180deg,#a78bfa,#d8b4fe)"></span>Parking</span>
+      </div>
+    </div>
+
+    <!-- Why section -->
+    <div class="card" style="margin-top:14px">
+      <h2 style="margin:0 0 8px">Why Inside Event?</h2>
+      <ul style="margin:8px 0 0 18px; line-height:1.6;color:var(--muted)">
+        <li>Premium security & fast entry</li>
+        <li>World-class sound & lighting</li>
+        <li>VIP lounges & bottle service</li>
+        <li>Central Baghdad location</li>
+      </ul>
+    </div>
+
+    <!-- ABOUT (English, professional) -->
+    <div class="card" style="margin-top:14px">
+      <h2 style="margin:0 0 8px">About Inside Event</h2>
+      <div class="about-grid">
+        <div>
+          <p class="about-lead">
+            Inside Event is a boutique nightlife and live-show producer based in Baghdad, crafting high-impact experiences that blend international talent, premium hospitality, and meticulous production design.
+          </p>
+          <p class="muted" style="margin-top:10px;line-height:1.7">
+            Since our founding, we have focused on elevating the region’s nightlife standard through disciplined planning, partnerships with world-class audio-visual teams, and a guest-first mindset. Our VIP model is built on reliability and detail: hosted tables, fast-track entry, and dedicated concierge support from purchase to final song.
+          </p>
+          <div class="about-badges">
+            <span class="badge-soft">Premium hospitality</span>
+            <span class="badge-soft">International artists</span>
+            <span class="badge-soft">Safety-first operations</span>
+            <span class="badge-soft">Transparent pricing</span>
+          </div>
+        </div>
+        <div>
+          <div class="about-facts">
+            <div class="fact">
+              <h4>Mission</h4>
+              <p>Deliver unforgettable nights with zero friction — where guests feel seen, safe, and valued.</p>
+            </div>
+            <div class="fact">
+              <h4>Vision</h4>
+              <p>Set a gold standard for nightlife experiences in Baghdad and beyond.</p>
+            </div>
+            <div class="fact">
+              <h4>What We Do</h4>
+              <p>Curate lineups, engineer sound & lighting, and provide tiered VIP seating with concierge support.</p>
+            </div>
+            <div class="fact">
+              <h4>Our Promise</h4>
+              <p>Clear communications, professional staff, and consistent quality — every show, every seat.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:12px">For partnerships and media, contact <a href="mailto:hello@inside-event.com">hello@inside-event.com</a>.</p>
+    </div>
+  </aside>
+</main>
+
+<footer>
+  © <span id="year"></span> Inside Event • Baghdad — All rights reserved.
+</footer>
+
+<!-- Floating Help Button & Chat -->
+<button class="help-btn" id="helpBtn" aria-label="Open help chat">?</button>
+<div class="chatbox" id="chatBox" role="dialog" aria-modal="true" aria-labelledby="chatTitle">
+  <div class="chat-head" id="chatTitle">Inside Event Support</div>
+  <div class="chat-body" id="chatBody">
+    <div class="msg m-bot">Hi! 👋 How can we help?</div>
+    <div class="msg m-bot">Popular: “Where is VIP?”, “What time does it start?”, “Payment issues”.</div>
+  </div>
+  <div class="chat-foot">
+    <input id="chatInput" type="text" placeholder="Type your message..." aria-label="Chat message" />
+    <button id="chatSend">Send</button>
+  </div>
+</div>
+
+<script>
+/* =========================
+   CONFIG — PAYTABS HPL
+   Replace with your Hosted Payment Link (HPL):
+   Example: https://www.paytabs.com/pay/ABC123
+   ========================= */
+const PAYTABS_LINK = "https://www.paytabs.com/pay/YOUR_LINK_ID"; // <--- REPLACE THIS
+
+/* =========================
+   UTIL
+   ========================= */
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const fmt = n => n.toLocaleString(undefined,{maximumFractionDigits:0});
+
+/* =========================
+   SOCIAL PROOF ROTATOR (every 5s)
+   ========================= */
+const socialMessages = [
+  "534 people purchased tickets this week!",
+  "VIP Gold is 82% sold — reserve now.",
+  "Fast-track entry included with all VIP tiers.",
+  "Trusted by 20,000+ guests across our seasons.",
+  "Concierge support from purchase to door.",
+  "Diamond Suites include private host & bottle service."
+];
+let socialIndex = 0;
+function cycleSocialProof(){
+  const el = $('#socialProof');
+  el.classList.remove('fade-in');
+  el.classList.add('fade-out');
+  setTimeout(()=>{
+    socialIndex = (socialIndex + 1) % socialMessages.length;
+    el.textContent = socialMessages[socialIndex];
+    el.classList.remove('fade-out');
+    el.classList.add('fade-in');
+  }, 300);
+}
+setInterval(cycleSocialProof, 5000);
+
+/* =========================
+   TICKETS INIT
+   ========================= */
+const state = {};
+function initTickets(){
+  $$('#ticketsList .ticket').forEach(card=>{
+    const key = card.dataset.key;
+    const price = Number(card.dataset.price);
+    const stock = Number(card.dataset.stock);
+    state[key] = { price, stock, selected:0 };
+
+    const qtySel = card.querySelector('[data-role="qty"]');
+    // Hard cap the select list to 20 for UX, still enforce stock
+    const maxList = Math.min(stock, 20);
+    for(let i=0;i<=maxList;i++){
+      const opt = document.createElement('option');
+      opt.value = i; opt.textContent = i;
+      qtySel.appendChild(opt);
+    }
+    qtySel.addEventListener('change', ()=>{
+      const q = Number(qtySel.value);
+      state[key].selected = q;
+      renderTicket(card, key);
+      recomputeTotals();
+      // Store choice locally for convenience
+      try{ localStorage.setItem('tickets_'+key, String(q)); }catch(e){}
+    });
+
+    // Restore previous selection
+    try{
+      const saved = Number(localStorage.getItem('tickets_'+key) || 0);
+      if(!Number.isNaN(saved)){
+        state[key].selected = Math.min(saved, maxList);
+        qtySel.value = String(state[key].selected);
+      }
+    }catch(e){}
+
+    renderTicket(card, key);
+  });
+  recomputeTotals();
+}
+
+function renderTicket(card, key){
+  const {stock, selected} = state[key];
+  const remain = Math.max(0, stock - selected);
+  card.querySelector('[data-role="remain"]').textContent = fmt(remain);
+  const statusEl = card.querySelector('[data-role="status"]');
+  const barEl = card.querySelector('[data-role="bar"]');
+
+  if(remain === 0){ statusEl.textContent = "Sold out"; statusEl.className = "status oos"; }
+  else if(remain <= Math.max(5, Math.floor(stock*0.1))){ statusEl.textContent = "Almost sold out"; statusEl.className = "status scarce"; }
+  else { statusEl.textContent = "Available"; statusEl.className = "status"; }
+
+  const sold = stock - remain;
+  const pct = Math.min(100, Math.round((sold/stock)*100));
+  barEl.style.width = (pct||3) + "%";
+}
+
+function recomputeTotals(){
+  let subtotal = 0;
+  Object.values(state).forEach(t=> subtotal += t.selected * t.price );
+  const fees = Math.round(subtotal * 0.03);
+  const total = subtotal + fees;
+  $('#subtotal').textContent = "$" + fmt(subtotal);
+  $('#fees').textContent     = "$" + fmt(fees);
+  $('#total').textContent    = "$" + fmt(total);
+  return {subtotal, fees, total};
+}
+
+/* =========================
+   PAY
+   ========================= */
+function payNow(){
+  const name  = $('#name').value.trim();
+  const email = $('#email').value.trim();
+  const anySelected = Object.values(state).some(t => t.selected > 0);
+
+  if(!anySelected){ alert("Select at least one ticket."); return; }
+  if(!name){ alert("Please enter your full name."); return; }
+  if(!email){ alert("Please enter your email."); return; }
+
+  const { total } = recomputeTotals();
+
+  if(!PAYTABS_LINK || PAYTABS_LINK.includes("YOUR_LINK_ID")){
+    alert("Configure your PayTabs link first in PAYTABS_LINK.");
+    return;
+  }
+  const url = new URL(PAYTABS_LINK);
+  // Only if your HPL supports query params:
+  url.searchParams.set("amount", String(total));
+  url.searchParams.set("customer_email", email);
+  url.searchParams.set("customer_name", name);
+
+  window.location.href = url.toString();
+}
+
+/* =========================
+   REVIEWS: duplicate track for seamless loop
+   ========================= */
+(function duplicateCarouselItems(){
+  const track = document.getElementById('carouselTrack');
+  track.innerHTML = track.innerHTML + track.innerHTML; // duplicate once more
+})();
+
+/* =========================
+   CHATBOT (simple local)
+   ========================= */
+(function chat(){
+  const btn = $('#helpBtn'), box = $('#chatBox'), body = $('#chatBody'), input = $('#chatInput'), send = $('#chatSend');
+  btn.addEventListener('click', ()=> box.style.display = (box.style.display==='flex' ? 'none':'flex'));
+  send.addEventListener('click', sendMsg);
+  input.addEventListener('keydown', e=>{ if(e.key==='Enter') sendMsg(); });
+
+  function sendMsg(){
+    const text = input.value.trim(); if(!text) return;
+    push(text, true);
+    input.value = '';
+    setTimeout(()=> reply(text), 400);
+  }
+  function push(t, me=false){
+    const div = document.createElement('div');
+    div.className = 'msg ' + (me ? 'm-you' : 'm-bot');
+    div.textContent = t;
+    body.appendChild(div);
+    body.scrollTop = body.scrollHeight;
+  }
+  function reply(q){
+    const a = q.toLowerCase();
+    if(a.includes('vip') || a.includes('diamond')) push('VIP lounges are located near the main stage with fast-track entry.', false);
+    else if(a.includes('time') || a.includes('start')) push('Doors open at 20:00. Show starts at 21:30.', false);
+    else if(a.includes('entrance') || a.includes('ingang')) push('General entrance on the left • VIP fast-track on the right.', false);
+    else if(a.includes('pay') || a.includes('betaal')) push('Payments are processed securely via PayTabs.', false);
+    else push('Thanks! Our team will get back to you soon. For urgent questions: support@inside-event.com', false);
+  }
+})();
+
+/* =========================
+   YEAR & INIT
+   ========================= */
+document.getElementById('year').textContent = new Date().getFullYear();
+document.getElementById('buyBtn').addEventListener('click', payNow);
+initTickets();
+
+/* =========================
+   2D MAP — interactivity (tooltip, select)
+   ========================= */
+(function map2D(){
+  const holder = $('#mapHolder');
+  const tip = $('#mapTooltip');
+
+  // Every <g> with class "zone" is interactive
+  $$('#mapHolder .zone').forEach(z=>{
+    // pointer events are on <rect> inside the <g>, so bubble from parent
+    const group = z.closest('g') || z;
+
+    const show = (evt)=>{
+      const txt = (group.dataset.tip || 'Zone');
+      tip.textContent = txt;
+      const rect = holder.getBoundingClientRect();
+      const x = evt.clientX - rect.left;
+      const y = evt.clientY - rect.top;
+      tip.style.left = x + 'px';
+      tip.style.top  = y + 'px';
+      tip.classList.add('visible');
+      tip.setAttribute('aria-hidden','false');
+    };
+
+    const hide = ()=>{
+      tip.classList.remove('visible');
+      tip.setAttribute('aria-hidden','true');
+    };
+
+    // hover
+    group.addEventListener('mousemove', show);
+    group.addEventListener('mouseenter', show);
+    group.addEventListener('mouseleave', hide);
+
+    // click to toggle selection
+    group.addEventListener('click', ()=>{
+      const rect = group.querySelector('rect.zone');
+      if(!rect) return;
+      rect.classList.toggle('selected');
+    });
+
+    // keyboard accessibility
+    group.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        const rect = group.querySelector('rect.zone');
+        if(!rect) return;
+        rect.classList.toggle('selected');
+      }
+    });
+  });
+})();
+
+/* =========================
+   ACCESSIBILITY: reduce motion preference
+   ========================= */
+try{
+  const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if(mq.matches){
+    // Stop marquee animation and social transitions
+    const track = document.getElementById('carouselTrack');
+    if(track) track.style.animation = 'none';
+  }
+}catch(e){}
+</script>
+
+</body>
+</html>
